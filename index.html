@@ -59,6 +59,35 @@
       border-radius: 8px;
     }
 
+    .video-card h3 {
+      font-size: 18px;
+      color: #fff;
+      margin: 10px 0;
+    }
+
+    .video-card p {
+      color: #ccc;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .button:hover {
+      background-color: #0056b3;
+    }
+
     footer {
       text-align: center;
       padding: 20px;
@@ -89,7 +118,19 @@
 
   <main>
     <div class="video-grid">
-      <!-- You can add your video content here -->
+      <!-- MrBeast Video -->
+      <div class="video-card">
+        <a href="https://www.youtube.com/watch?v=0e3GPea1Tyg" target="_blank">
+          <img src="https://img.youtube.com/vi/0e3GPea1Tyg/0.jpg" alt="MrBeast Squid Game" width="100%" />
+        </a>
+        <h3>$456,000 Squid Game In Real Life! - MrBeast</h3>
+        <p>MrBeast • 200M views • 2 months ago</p>
+
+        <div class="buttons">
+          <button class="button">Like</button>
+          <button class="button">Subscribe</button>
+        </div>
+      </div>
     </div>
   </main>
 
