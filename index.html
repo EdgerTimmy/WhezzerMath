@@ -40,11 +40,21 @@
       color: white;
     }
 
-    .video-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    .content {
+      display: flex;
       gap: 20px;
       padding: 20px;
+    }
+
+    .video-section {
+      flex: 3;
+    }
+
+    .side-video-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
     }
 
     .video-card {
@@ -89,6 +99,35 @@
       background-color: #0056b3;
     }
 
+    .comments-section {
+      background-color: #333;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 20px;
+    }
+
+    .comment-input {
+      width: 100%;
+      padding: 10px;
+      background-color: #444;
+      color: white;
+      border-radius: 8px;
+      border: 1px solid #444;
+    }
+
+    .comment-list {
+      margin-top: 15px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .comment {
+      background-color: #2c2c2c;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+    }
+
     footer {
       text-align: center;
       padding: 20px;
@@ -96,7 +135,6 @@
       color: #ccc;
     }
 
-    /* Transparent Text at the Bottom */
     .transparent-text {
       position: fixed;
       bottom: 20px;
@@ -107,7 +145,6 @@
       font-weight: bold;
     }
 
-    /* Video Modal */
     .video-modal {
       display: none;
       position: fixed;
@@ -146,21 +183,47 @@
     <input type="text" placeholder="Search videos..." />
   </header>
 
-  <main>
-    <div class="video-grid">
-      <!-- MrBeast Video -->
+  <div class="content">
+    <!-- Main Video Section -->
+    <div class="video-section">
       <div class="video-card">
-        <img class="video-thumbnail" src="https://img.youtube.com/vi/0e3GPea1Tyg/0.jpg" alt="MrBeast Squid Game" data-video-id="0e3GPea1Tyg" />
+        <!-- Video Player -->
+        <div class="video-container">
+          <iframe id="videoIframe" src="https://www.youtube.com/embed/0e3GPea1Tyg?autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+
         <h3>$456,000 Squid Game In Real Life! - MrBeast</h3>
         <p>MrBeast • 200M views • 2 months ago</p>
 
         <div class="buttons">
-          <button class="button">Like</button>
-          <button class="button">Subscribe</button>
+          <button class="button" id="likeBtn">Like</button>
+          <button class="button" id="subscribeBtn">Subscribe</button>
+        </div>
+
+        <div class="comments-section">
+          <textarea id="commentInput" class="comment-input" placeholder="Add a comment..."></textarea>
+          <button class="button" onclick="addComment()">Post Comment</button>
+
+          <div class="comment-list" id="commentList"></div>
         </div>
       </div>
     </div>
-  </main>
+
+    <!-- Side Video Section -->
+    <div class="side-video-section">
+      <!-- Placeholder side videos -->
+      <div class="video-card">
+        <img class="video-thumbnail" src="https://img.youtube.com/vi/1gLHZtGf3G4/0.jpg" alt="Side Video 1" />
+        <h3>Side Video 1</h3>
+        <p>100M views • 1 month ago</p>
+      </div>
+      <div class="video-card">
+        <img class="video-thumbnail" src="https://img.youtube.com/vi/2L6lXZdqY-E/0.jpg" alt="Side Video 2" />
+        <h3>Side Video 2</h3>
+        <p>50M views • 3 weeks ago</p>
+      </div>
+    </div>
+  </div>
 
   <footer>
     <p>&copy; 2025 MattTube</p>
@@ -169,28 +232,34 @@
   <!-- Transparent Text -->
   <div class="transparent-text">proof matthew pella made this!</div>
 
-  <!-- Video Modal -->
-  <div class="video-modal" id="videoModal">
-    <span class="modal-close" onclick="closeModal()">X</span>
-    <iframe id="videoIframe" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-  </div>
-
   <script>
-    // Open the video modal when clicking the thumbnail
-    document.querySelectorAll('.video-thumbnail').forEach(function(thumbnail) {
-      thumbnail.addEventListener('click', function() {
-        var videoId = thumbnail.getAttribute('data-video-id');
-        var iframe = document.getElementById('videoIframe');
-        iframe.src = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1&showinfo=0&controls=1'; // Embed with autoplay and controls enabled
-        document.getElementById('videoModal').style.display = 'flex';
-      });
+    // Like button functionality
+    let likeCount = 0;
+    document.getElementById('likeBtn').addEventListener('click', function() {
+      likeCount++;
+      this.innerText = `Like (${likeCount})`;
     });
 
-    // Close the video modal
-    function closeModal() {
-      var iframe = document.getElementById('videoIframe');
-      iframe.src = ''; // Stop the video when closing
-      document.getElementById('videoModal').style.display = 'none';
+    // Subscribe button functionality
+    let subscribed = false;
+    document.getElementById('subscribeBtn').addEventListener('click', function() {
+      subscribed = !subscribed;
+      this.innerText = subscribed ? "Unsubscribe" : "Subscribe";
+    });
+
+    // Add comment functionality
+    function addComment() {
+      const commentInput = document.getElementById('commentInput');
+      const commentList = document.getElementById('commentList');
+
+      if (commentInput.value.trim() !== "") {
+        const newComment = document.createElement('div');
+        newComment.classList.add('comment');
+        newComment.textContent = commentInput.value;
+        commentList.appendChild(newComment);
+
+        commentInput.value = ""; // Clear input field
+      }
     }
   </script>
 
