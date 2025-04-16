@@ -181,7 +181,7 @@
       thumbnail.addEventListener('click', function() {
         var videoId = thumbnail.getAttribute('data-video-id');
         var iframe = document.getElementById('videoIframe');
-        iframe.src = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1'; // Embed the video
+        iframe.src = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1&showinfo=0&controls=1'; // Embed with autoplay and controls enabled
         document.getElementById('videoModal').style.display = 'flex';
       });
     });
