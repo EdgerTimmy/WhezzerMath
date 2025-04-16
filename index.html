@@ -19,6 +19,9 @@
       background: #007bff; /* Blue header */
       color: white;
       justify-content: space-between;
+      position: fixed; /* Keeps header on top */
+      width: 100%;
+      z-index: 1000; /* Makes sure it's always on top */
     }
 
     header h1 {
@@ -45,6 +48,7 @@
       gap: 20px;
       padding: 20px;
       display: none; /* Hide video section by default */
+      margin-top: 60px; /* Adjust margin to make room for fixed header */
     }
 
     .video-section {
@@ -145,24 +149,39 @@
       color: rgba(255, 255, 255, 0.3); /* Transparent white text */
       font-weight: bold;
     }
+
+    /* Video size */
+    #videoIframe {
+      width: 100%;
+      height: 400px; /* Adjusted video size */
+      border-radius: 8px;
+    }
+
+    /* Disable all elements except video section */
+    .disabled {
+      pointer-events: none;
+      opacity: 0.5;
+    }
   </style>
 </head>
 <body>
 
-  <header>
-    <a href="index.html">  <!-- Link to the home page -->
+  <!-- Fixed Header -->
+  <header id="header">
+    <a href="index.html" id="homeLink">  <!-- Link to the home page -->
       <h1>MattTube</h1>
     </a>
     <input type="text" placeholder="Search videos..." />
   </header>
 
+  <!-- Home Page Video Card -->
   <div class="video-card" onclick="openVideo('0e3GPea1Tyg', '$456,000 Squid Game In Real Life! - MrBeast')">
     <img class="video-thumbnail" src="https://img.youtube.com/vi/0e3GPea1Tyg/0.jpg" alt="MrBeast Squid Game" />
     <h3>$456,000 Squid Game In Real Life! - MrBeast</h3>
     <p>MrBeast • 200M views • 2 months ago</p>
   </div>
 
-  <!-- Video Section -->
+  <!-- Video Section (Visible only when a video is clicked) -->
   <div class="content" id="videoContent">
     <!-- Video Player -->
     <div class="video-section">
@@ -183,15 +202,14 @@
       </div>
     </div>
 
-    <!-- Side Video Section -->
+    <!-- Side Video Section (Placeholder Videos) -->
     <div class="side-video-section">
-      <!-- Placeholder side videos -->
-      <div class="video-card">
+      <div class="video-card" onclick="openVideo('1gLHZtGf3G4', 'Side Video 1')">
         <img class="video-thumbnail" src="https://img.youtube.com/vi/1gLHZtGf3G4/0.jpg" alt="Side Video 1" />
         <h3>Side Video 1</h3>
         <p>100M views • 1 month ago</p>
       </div>
-      <div class="video-card">
+      <div class="video-card" onclick="openVideo('2L6lXZdqY-E', 'Side Video 2')">
         <img class="video-thumbnail" src="https://img.youtube.com/vi/2L6lXZdqY-E/0.jpg" alt="Side Video 2" />
         <h3>Side Video 2</h3>
         <p>50M views • 3 weeks ago</p>
@@ -207,6 +225,21 @@
   <div class="transparent-text">proof matthew pella made this!</div>
 
   <script>
+    // Disable all elements except the video section when a video is clicked
+    function disableElements() {
+      document.getElementById('header').classList.add('disabled');
+      document.querySelectorAll('.video-card').forEach(card => card.classList.add('disabled'));
+      document.getElementById('homeLink').classList.add('disabled');
+    }
+
+    // Enable all elements when leaving the video section
+    function enableElements() {
+      document.getElementById('header').classList.remove('disabled');
+      document.querySelectorAll('.video-card').forEach(card => card.classList.remove('disabled'));
+      document.getElementById('homeLink').classList.remove('disabled');
+      document.getElementById('videoContent').style.display = 'none'; // Hide video content
+    }
+
     // Check if username exists in localStorage
     function getUsername() {
       return localStorage.getItem('username');
@@ -230,63 +263,51 @@
 
     // Store comments in localStorage
     function loadComments() {
-      const savedComments = JSON.parse(localStorage.getItem('comments')) || [];
+      const comments = JSON.parse(localStorage.getItem('comments')) || [];
       const commentList = document.getElementById('commentList');
-      commentList.innerHTML = ''; // Clear current comments
-      savedComments.forEach(comment => {
-        const newComment = document.createElement('div');
-        newComment.classList.add('comment');
-        newComment.innerHTML = `<strong>${comment.username}:</strong> ${comment.text}`;
-        commentList.appendChild(newComment);
+      commentList.innerHTML = ''; // Clear existing comments
+      comments.forEach(comment => {
+        const commentElement = document.createElement('div');
+        commentElement.classList.add('comment');
+        commentElement.innerText = `${comment.username}: ${comment.text}`;
+        commentList.appendChild(commentElement);
       });
     }
 
-    // Save a new comment
     function addComment() {
       const commentInput = document.getElementById('commentInput');
-      const commentText = commentInput.value.trim();
-
-      if (!getUsername()) {
-        alert('You need to set a username before commenting!');
-        setUsername();
+      const username = getUsername();
+      if (!username) {
+        alert('Please set a username before commenting.');
+        setUsername(); // Ask for a username
         return;
       }
 
-      if (commentText !== "") {
-        const savedComments = JSON.parse(localStorage.getItem('comments')) || [];
-        savedComments.push({ username: getUsername(), text: commentText });
-        localStorage.setItem('comments', JSON.stringify(savedComments));
-        loadComments();
-        commentInput.value = ""; // Clear input field
+      const commentText = commentInput.value.trim();
+      if (commentText) {
+        const comments = JSON.parse(localStorage.getItem('comments')) || [];
+        comments.push({ username, text: commentText });
+        localStorage.setItem('comments', JSON.stringify(comments));
+        commentInput.value = ''; // Clear input
+        loadComments(); // Reload comments
       }
     }
 
-    // Video Like/Subscribe functionality
-    let likeCount = 0;
-    let subscribed = false;
-
+    // Open a video by ID
     function openVideo(videoId, title) {
-      document.getElementById('videoContent').style.display = 'flex';
-      document.getElementById('videoIframe').src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
-      document.getElementById('videoTitle').textContent = title;
-      document.getElementById('videoInfo').textContent = `MrBeast • 200M views • 2 months ago`;
-
-      // Reset buttons
-      document.getElementById('likeBtn').innerText = `Like (${likeCount})`;
-      document.getElementById('subscribeBtn').innerText = subscribed ? "Unsubscribe" : "Subscribe";
-      loadComments(); // Load saved comments
+      disableElements();
+      document.getElementById('videoContent').style.display = 'flex'; // Show video content section
+      const iframe = document.getElementById('videoIframe');
+      iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+      document.getElementById('videoTitle').innerText = title;
+      document.getElementById('videoInfo').innerText = 'MrBeast • 200M views • 2 months ago';
     }
 
-    document.getElementById('likeBtn').addEventListener('click', function() {
-      likeCount++;
-      this.innerText = `Like (${likeCount})`;
-    });
-
-    document.getElementById('subscribeBtn').addEventListener('click', function() {
-      subscribed = !subscribed;
-      this.innerText = subscribed ? "Unsubscribe" : "Subscribe";
-    });
+    // Enable elements on page load
+    window.onload = function() {
+      enableElements();
+      loadComments();
+    }
   </script>
-
 </body>
 </html>
