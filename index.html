@@ -105,6 +105,203 @@
       color: rgba(255, 255, 255, 0.3); /* Transparent white text */
       font-weight: bold;
     }
+
+    /* Video Modal */
+    .video-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+
+    .video-modal iframe {
+      width: 80%;
+      height: 80%;
+      border-radius: 8px;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      color: white;
+      font-size: 30px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="index.html">  <!-- Link to the home page -->
+      <h1>MattTube</h1>
+    </a>
+    <input type="text" placeholder="Search videos..." />
+  </header>
+
+  <main>
+    <div class="video-grid">
+      <!-- MrBeast Video -->
+      <div class="video-card">
+        <img class="video-thumbnail" src="https://img.youtube.com/vi/0e3GPea1Tyg/0.jpg" alt="MrBeast Squid Game" width="100%" data-video-id="0e3GPea1Tyg" />
+        <h3>$456,000 Squid Game In Real Life! - MrBeast</h3>
+        <p>MrBeast • 200M views • 2 months ago</p>
+
+        <div class="buttons">
+          <button class="button">Like</button>
+          <button class="button">Subscribe</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 MattTube</p>
+  </footer>
+
+  <!-- Transparent Text -->
+  <div class="transparent-text">proof matthew pella made this!</div>
+
+  <!-- Video Modal -->
+  <div class="video-modal" id="videoModal">
+    <span class="modal-close" onclick="closeModal()">X</span>
+    <iframe id="videoIframe" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+  </div>
+
+  <script>
+    // Open the video modal when clicking the thumbnail
+    document.querySelectorAll('.video-thumbnail').forEach(function(thumbnail) {
+      thumbnail.addEventListener('click', function() {
+        var videoId = thumbnail.getAttribute('data-video-id');
+        var iframe = document.getElementById('videoIframe');
+        iframe.src = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1';
+        document.getElementById('videoModal').style.display = 'flex';
+      });
+    });
+
+    // Close the video modal
+    function closeModal() {
+      var iframe = document.getElementById('videoIframe');
+      iframe.src = ''; // Stop the video when closing
+      document.getElementById('videoModal').style.display = 'none';
+    }
+  </script>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MattTube</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #1a1a1a; /* Dark background */
+      color: #fff; /* White text */
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      padding: 10px 20px;
+      background: #007bff; /* Blue header */
+      color: white;
+      justify-content: space-between;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    header a {
+      color: white; /* Link color */
+      text-decoration: none; /* Remove underline */
+    }
+
+    header input {
+      padding: 5px;
+      width: 300px;
+      border: none;
+      border-radius: 4px;
+      background-color: #444;
+      color: white;
+    }
+
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .video-card {
+      background: #2c2c2c; /* Darker card background */
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+    }
+
+    video {
+      width: 100%;
+      border-radius: 8px;
+    }
+
+    .video-card h3 {
+      font-size: 18px;
+      color: #fff;
+      margin: 10px 0;
+    }
+
+    .video-card p {
+      color: #ccc;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .button:hover {
+      background-color: #0056b3;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: #111; /* Very dark footer */
+      color: #ccc;
+    }
+
+    /* Transparent Text at the Bottom */
+    .transparent-text {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 30px;
+      color: rgba(255, 255, 255, 0.3); /* Transparent white text */
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
