@@ -207,6 +207,27 @@
   <div class="transparent-text">proof matthew pella made this!</div>
 
   <script>
+    // Check if username exists in localStorage
+    function getUsername() {
+      return localStorage.getItem('username');
+    }
+
+    // Prompt user to set a username if not set
+    function setUsername() {
+      let username = prompt('Please set a unique username:');
+      if (username) {
+        const existingUsers = JSON.parse(localStorage.getItem('usernames')) || [];
+        if (existingUsers.includes(username)) {
+          alert('Username already taken. Please choose another one.');
+          setUsername(); // Recursively ask for a new username
+        } else {
+          localStorage.setItem('username', username);
+          existingUsers.push(username);
+          localStorage.setItem('usernames', JSON.stringify(existingUsers));
+        }
+      }
+    }
+
     // Store comments in localStorage
     function loadComments() {
       const savedComments = JSON.parse(localStorage.getItem('comments')) || [];
@@ -215,7 +236,7 @@
       savedComments.forEach(comment => {
         const newComment = document.createElement('div');
         newComment.classList.add('comment');
-        newComment.textContent = comment;
+        newComment.innerHTML = `<strong>${comment.username}:</strong> ${comment.text}`;
         commentList.appendChild(newComment);
       });
     }
@@ -224,9 +245,16 @@
     function addComment() {
       const commentInput = document.getElementById('commentInput');
       const commentText = commentInput.value.trim();
+
+      if (!getUsername()) {
+        alert('You need to set a username before commenting!');
+        setUsername();
+        return;
+      }
+
       if (commentText !== "") {
         const savedComments = JSON.parse(localStorage.getItem('comments')) || [];
-        savedComments.push(commentText);
+        savedComments.push({ username: getUsername(), text: commentText });
         localStorage.setItem('comments', JSON.stringify(savedComments));
         loadComments();
         commentInput.value = ""; // Clear input field
