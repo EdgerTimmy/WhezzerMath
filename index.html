@@ -21,6 +21,16 @@
       justify-content: space-between;
     }
 
+    header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    header a {
+      color: white; /* Link color */
+      text-decoration: none; /* Remove underline */
+    }
+
     header input {
       padding: 5px;
       width: 300px;
@@ -28,11 +38,6 @@
       border-radius: 4px;
       background-color: #444;
       color: white;
-    }
-
-    header h1 {
-      margin: 0;
-      font-size: 24px;
     }
 
     .video-grid {
@@ -65,7 +70,9 @@
 <body>
 
   <header>
-    <h1>MattTube</h1>
+    <a href="index.html">  <!-- Link to the home page -->
+      <h1>MattTube</h1>
+    </a>
     <input type="text" placeholder="Search videos..." />
   </header>
 
