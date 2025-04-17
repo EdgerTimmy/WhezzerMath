@@ -162,6 +162,12 @@
       pointer-events: none;
       opacity: 0.5;
     }
+
+    /* Disabled thumbnail style */
+    .disabled-thumbnail {
+      pointer-events: none;
+      opacity: 0.5;
+    }
   </style>
 </head>
 <body>
@@ -199,6 +205,7 @@
         <button class="button" onclick="addComment()">Post Comment</button>
 
         <div class="comment-list" id="commentList"></div>
+        <p id="commentCount"></p>
       </div>
     </div>
 
@@ -269,38 +276,34 @@
       iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
       document.getElementById('videoTitle').innerText = title;
       document.getElementById('videoInfo').innerText = 'MrBeast • 200M views • 2 months ago';
+      // Disable thumbnail when clicked
+      const thumbnails = document.querySelectorAll('.video-thumbnail');
+      thumbnails.forEach(thumbnail => thumbnail.classList.add('disabled-thumbnail'));
     }
 
     // Toggle Like button state and save to localStorage
     function toggleLike() {
       const likeBtn = document.getElementById('likeBtn');
-      const liked = localStorage.getItem('liked') === 'true';
-      if (liked) {
-        likeBtn.innerText = 'Like';
-        localStorage.setItem('liked', 'false');
-      } else {
-        likeBtn.innerText = 'Liked';
-        localStorage.setItem('liked', 'true');
-      }
+      let likes = parseInt(localStorage.getItem('likes')) || 0;
+      likes += 1;
+      localStorage.setItem('likes', likes);
+      likeBtn.innerText = `Like (${likes})`;
     }
 
     // Toggle Subscribe button state and save to localStorage
     function toggleSubscribe() {
       const subscribeBtn = document.getElementById('subscribeBtn');
-      const subscribed = localStorage.getItem('subscribed') === 'true';
-      if (subscribed) {
-        subscribeBtn.innerText = 'Subscribe';
-        localStorage.setItem('subscribed', 'false');
-      } else {
-        subscribeBtn.innerText = 'Subscribed';
-        localStorage.setItem('subscribed', 'true');
-      }
+      let subscriptions = parseInt(localStorage.getItem('subscriptions')) || 0;
+      subscriptions += 1;
+      localStorage.setItem('subscriptions', subscriptions);
+      subscribeBtn.innerText = `Subscribe (${subscriptions})`;
     }
 
     // Load comments from localStorage
     function loadComments() {
       const comments = JSON.parse(localStorage.getItem('comments')) || [];
       const commentList = document.getElementById('commentList');
+      const commentCount = document.getElementById('commentCount');
       commentList.innerHTML = ''; // Clear existing comments
       comments.forEach(comment => {
         const commentElement = document.createElement('div');
@@ -308,6 +311,7 @@
         commentElement.innerText = `${comment.username}: ${comment.text}`;
         commentList.appendChild(commentElement);
       });
+      commentCount.innerText = `Comments: ${comments.length}`;
     }
 
     // Add a comment to localStorage
@@ -333,11 +337,10 @@
     // Enable elements when page loads
     window.onload = function() {
       loadComments();
-      const liked = localStorage.getItem('liked') === 'true';
-      document.getElementById('likeBtn').innerText = liked ? 'Liked' : 'Like';
-
-      const subscribed = localStorage.getItem('subscribed') === 'true';
-      document.getElementById('subscribeBtn').innerText = subscribed ? 'Subscribed' : 'Subscribe';
+      const likes = localStorage.getItem('likes') || 0;
+      const subscriptions = localStorage.getItem('subscriptions') || 0;
+      document.getElementById('likeBtn').innerText = `Like (${likes})`;
+      document.getElementById('subscribeBtn').innerText = `Subscribe (${subscriptions})`;
     }
   </script>
 </body>
