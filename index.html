@@ -190,8 +190,8 @@
       <p id="videoInfo"></p>
 
       <div class="buttons">
-        <button class="button" id="likeBtn">Like</button>
-        <button class="button" id="subscribeBtn">Subscribe</button>
+        <button class="button" id="likeBtn" onclick="toggleLike()">Like</button>
+        <button class="button" id="subscribeBtn" onclick="toggleSubscribe()">Subscribe</button>
       </div>
 
       <div class="comments-section">
@@ -261,7 +261,43 @@
       }
     }
 
-    // Store comments in localStorage
+    // Open a video by ID
+    function openVideo(videoId, title) {
+      disableElements();
+      document.getElementById('videoContent').style.display = 'flex'; // Show video content section
+      const iframe = document.getElementById('videoIframe');
+      iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+      document.getElementById('videoTitle').innerText = title;
+      document.getElementById('videoInfo').innerText = 'MrBeast • 200M views • 2 months ago';
+    }
+
+    // Toggle Like button state and save to localStorage
+    function toggleLike() {
+      const likeBtn = document.getElementById('likeBtn');
+      const liked = localStorage.getItem('liked') === 'true';
+      if (liked) {
+        likeBtn.innerText = 'Like';
+        localStorage.setItem('liked', 'false');
+      } else {
+        likeBtn.innerText = 'Liked';
+        localStorage.setItem('liked', 'true');
+      }
+    }
+
+    // Toggle Subscribe button state and save to localStorage
+    function toggleSubscribe() {
+      const subscribeBtn = document.getElementById('subscribeBtn');
+      const subscribed = localStorage.getItem('subscribed') === 'true';
+      if (subscribed) {
+        subscribeBtn.innerText = 'Subscribe';
+        localStorage.setItem('subscribed', 'false');
+      } else {
+        subscribeBtn.innerText = 'Subscribed';
+        localStorage.setItem('subscribed', 'true');
+      }
+    }
+
+    // Load comments from localStorage
     function loadComments() {
       const comments = JSON.parse(localStorage.getItem('comments')) || [];
       const commentList = document.getElementById('commentList');
@@ -274,6 +310,7 @@
       });
     }
 
+    // Add a comment to localStorage
     function addComment() {
       const commentInput = document.getElementById('commentInput');
       const username = getUsername();
@@ -293,20 +330,14 @@
       }
     }
 
-    // Open a video by ID
-    function openVideo(videoId, title) {
-      disableElements();
-      document.getElementById('videoContent').style.display = 'flex'; // Show video content section
-      const iframe = document.getElementById('videoIframe');
-      iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
-      document.getElementById('videoTitle').innerText = title;
-      document.getElementById('videoInfo').innerText = 'MrBeast • 200M views • 2 months ago';
-    }
-
-    // Enable elements on page load
+    // Enable elements when page loads
     window.onload = function() {
-      enableElements();
       loadComments();
+      const liked = localStorage.getItem('liked') === 'true';
+      document.getElementById('likeBtn').innerText = liked ? 'Liked' : 'Like';
+
+      const subscribed = localStorage.getItem('subscribed') === 'true';
+      document.getElementById('subscribeBtn').innerText = subscribed ? 'Subscribed' : 'Subscribe';
     }
   </script>
 </body>
